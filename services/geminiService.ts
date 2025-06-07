@@ -19,12 +19,18 @@ if (!API_KEY) {
 // 🔄 NUEVA OPCIÓN: Usar Supabase Edge Functions
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true';
 
+// Declare geminiService variable at top level
+let geminiService: {
+  createChatSessionWithHistory: (systemInstruction: string, history: Content[]) => Promise<any>;
+  sendMessageStream: (chat: any, messageText: string, imageFile?: UploadedFile) => AsyncGenerator<{ text: string; groundingChunks?: GroundingChunk[] }, void, undefined>;
+};
+
 if (USE_SUPABASE) {
   console.log('🔐 Usando Supabase Edge Functions para Gemini (más seguro)');
   // Importar el servicio de Supabase
   const { supabaseGeminiService } = await import('./supabaseGeminiService');
   
-  export const geminiService = {
+  geminiService = {
     createChatSessionWithHistory: async (systemInstruction: string, history: Content[]) => {
       // Retornar un objeto que simule el chat de Gemini
       return {
@@ -158,8 +164,10 @@ if (USE_SUPABASE) {
     }
   }
 
-  export const geminiService = {
+  geminiService = {
     createChatSessionWithHistory,
     sendMessageStream,
   };
 }
+
+export { geminiService };
