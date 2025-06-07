@@ -5,15 +5,8 @@ import type { GroundingChunk, UploadedFile } from '../types';
 // Intenta obtener la API key de diferentes fuentes
 let API_KEY = process.env.API_KEY || process.env.GEMINI_API_KEY;
 
-// ⚠️ SOLO PARA PRUEBAS: Si no hay variable de entorno, intenta cargar desde config
 if (!API_KEY) {
-  try {
-    const { API_CONFIG } = await import('../config/api.js');
-    API_KEY = API_CONFIG.GEMINI_API_KEY;
-    console.warn('⚠️ Usando API key desde archivo de configuración. Esto NO es seguro para producción.');
-  } catch (error) {
-    console.error("❌ No se encontró API_KEY. Configura la variable de entorno API_KEY o GEMINI_API_KEY.");
-  }
+  console.error("❌ No se encontró API_KEY. Configura la variable de entorno API_KEY o GEMINI_API_KEY.");
 }
 
 // 🔄 NUEVA OPCIÓN: Usar Supabase Edge Functions
