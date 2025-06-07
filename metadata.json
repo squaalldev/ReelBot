@@ -1,0 +1,6 @@
+{
+  "name": "ReelBot para gradio",
+  "description": "An AI-powered assistant to help you create viral Reels. Get ideas, structure, and formulas for your Reels, and save your chat sessions.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

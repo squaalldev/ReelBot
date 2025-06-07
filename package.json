@@ -1,0 +1,14 @@
+
+{
+  "name": "reel-creator-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo \"Para desarrollo, sirve index.html con un live server. Asegúrate de que la variable de entorno API_KEY esté disponible si pruebas la funcionalidad de Gemini.\"",
+    "build": "rm -rf dist && mkdir -p dist && cp index.html dist/index.html && esbuild index.tsx --bundle --outfile=dist/bundle.js --define:process.env.API_KEY=\\\"$API_KEY\\\" --platform=browser --format=esm --jsx=automatic",
+    "postbuild": "echo \"Build completo. El contenido estático está en la carpeta dist/\""
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  }
+}
