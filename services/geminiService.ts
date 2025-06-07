@@ -2,15 +2,18 @@ import { GoogleGenAI, Chat, HarmCategory, HarmBlockThreshold, GenerateContentRes
 import { MODEL_NAME } from '../constants';
 import type { GroundingChunk, UploadedFile } from '../types';
 
-// Intenta obtener la API key de diferentes fuentes
-let API_KEY = process.env.API_KEY || process.env.GEMINI_API_KEY;
-
-if (!API_KEY) {
-  console.error("❌ No se encontró API_KEY. Configura la variable de entorno API_KEY o GEMINI_API_KEY.");
-}
-
 // 🔄 NUEVA OPCIÓN: Usar Supabase Edge Functions
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true';
+
+// Intenta obtener la API key de diferentes fuentes (solo si no usa Supabase)
+let API_KEY: string | undefined;
+if (!USE_SUPABASE) {
+  API_KEY = import.meta.env.VITE_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
+  
+  if (!API_KEY) {
+    console.error("❌ No se encontró API_KEY. Configura la variable de entorno VITE_API_KEY o VITE_GEMINI_API_KEY.");
+  }
+}
 
 // Declare geminiService variable at top level
 let geminiService: {
@@ -20,8 +23,9 @@ let geminiService: {
 
 if (USE_SUPABASE) {
   console.log('🔐 Usando Supabase Edge Functions para Gemini (más seguro)');
-  // Importar el servicio de Supabase
-  const { supabaseGeminiService } = await import('./supabaseGeminiService');
+  
+  // Importar el servicio de Supabase de forma síncrona
+  import { supabaseGeminiService } from './supabaseGeminiService';
   
   geminiService = {
     createChatSessionWithHistory: async (systemInstruction: string, history: Content[]) => {
@@ -57,7 +61,7 @@ if (USE_SUPABASE) {
     console.error("❌ API_KEY para Gemini no está configurada. La aplicación no funcionará correctamente.");
   }
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY! });
+  const ai = new GoogleGenAI(API_KEY!);
 
   const generationConfigValues = {
     temperature: 0.7,
