@@ -1,6 +1,7 @@
 import { GoogleGenAI, Chat, HarmCategory, HarmBlockThreshold, GenerateContentResponse, Part, Content } from "@google/genai";
 import { MODEL_NAME } from '../constants';
 import type { GroundingChunk, UploadedFile } from '../types';
+import { supabaseGeminiService } from './supabaseGeminiService';
 
 // 🔄 NUEVA OPCIÓN: Usar Supabase Edge Functions
 const USE_SUPABASE = import.meta.env.VITE_USE_SUPABASE === 'true';
@@ -23,9 +24,6 @@ let geminiService: {
 
 if (USE_SUPABASE) {
   console.log('🔐 Usando Supabase Edge Functions para Gemini (más seguro)');
-  
-  // Importar el servicio de Supabase de forma síncrona
-  import { supabaseGeminiService } from './supabaseGeminiService';
   
   geminiService = {
     createChatSessionWithHistory: async (systemInstruction: string, history: Content[]) => {
